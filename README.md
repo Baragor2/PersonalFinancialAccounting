@@ -5,3 +5,7 @@ from .main import *
 
 DEBUG = True
 ```
+
+Default superuser:
+username: ihar
+password: 12345678
