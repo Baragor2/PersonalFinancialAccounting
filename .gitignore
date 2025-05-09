@@ -173,6 +173,6 @@ private_key.pem
 
 .vscode/
 *.pyc
-core/project/settings/local.py
+app/project/settings/local.py
 static/*
 !static/.gitkeep%

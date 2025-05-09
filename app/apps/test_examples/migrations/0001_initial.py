@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
             name='TestExample',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Дата обновления')),
-                ('title', models.CharField(max_length=255, verbose_name='Название')),
+                ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
+                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated at')),
+                ('title', models.CharField(max_length=255, verbose_name='Title')),
             ],
             options={
-                'verbose_name': 'Тестовый пример',
-                'verbose_name_plural': 'Тестовые примеры',
+                'verbose_name': 'Test example',
+                'verbose_name_plural': 'Test examples',
             },
         ),
     ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.apps.test_examples.models.test_examples import TestExample
+from app.apps.test_examples.models.test_examples import TestExample
 
 
 @admin.register(TestExample)

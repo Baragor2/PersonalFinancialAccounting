@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_spectacular',
     # first party
-    'core.apps.test_examples.apps.TestExamplesConfig',
+    'app.apps.test_examples.apps.TestExamplesConfig',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'core.project.urls'
+ROOT_URLCONF = 'app.project.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.project.wsgi.application'
+WSGI_APPLICATION = 'app.project.wsgi.application'
 
 
 # Database
