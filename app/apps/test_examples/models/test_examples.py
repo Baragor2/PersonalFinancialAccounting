@@ -13,5 +13,5 @@ class TestExample(TimedBaseModel):
         return self.title
 
     class Meta:
-        verbose_name = 'Test example'
-        verbose_name_plural = 'Test examples'
+        verbose_name = "Test example"
+        verbose_name_plural = "Test examples"
