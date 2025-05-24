@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 from django.db import models
 
 from app.apps.categories.models.categories import Category
@@ -29,7 +30,7 @@ class Transaction(TimedBaseModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='transactions',
+        related_name="transactions",
     )
     description = models.TextField(blank=True)
 
@@ -39,4 +40,4 @@ class Transaction(TimedBaseModel):
     class Meta:
         verbose_name = "Transaction"
         verbose_name_plural = "Transactions"
-        ordering = ['created_at']
+        ordering = ["created_at"]

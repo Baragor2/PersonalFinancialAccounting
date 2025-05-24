@@ -6,5 +6,5 @@ from app.apps.transactions.models.transactions import Transaction
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = '__all__'
-        read_only_fields = ('user',)
+        fields = "__all__"
+        read_only_fields = ("user",)

@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 from django.db import models
 
 from app.apps.common.models import TimedBaseModel
@@ -18,7 +19,7 @@ class Category(TimedBaseModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='categories',
+        related_name="categories",
     )
 
     def __str__(self) -> str:
@@ -27,4 +28,4 @@ class Category(TimedBaseModel):
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-        ordering = ['created_at']
+        ordering = ["created_at"]

@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -13,4 +14,4 @@ class User(AbstractUser, TimedBaseModel):
     )
 
     class Meta:
-        ordering = ['created_at']
+        ordering = ["created_at"]
