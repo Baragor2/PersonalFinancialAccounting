@@ -1,3 +1,5 @@
-from django.urls import URLPattern
+from django.urls import path, include
 
-urlpatterns: list[URLPattern] = []
+urlpatterns = [
+    path('v1/', include('app.api.v1.urls')),
+]
