@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.apps.transactions.models.transactions import Transaction
+from app.apps.main.models.transactions import Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer):

@@ -2,8 +2,8 @@ from django.db.models.query import QuerySet
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from app.apps.categories.models.categories import Category
-from app.apps.categories.serializers import CategorySerializer
+from app.apps.main.models.categories import Category
+from app.apps.main.serializers.categories import CategorySerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

@@ -2,8 +2,8 @@ from uuid import uuid4
 
 from django.db import models
 
-from app.apps.categories.models.categories import Category
-from app.apps.common.models import TimedBaseModel
+from app.apps.main.models.categories import Category
+from app.apps.main.models.common import TimedBaseModel
 from app.apps.users.models.users import User
 
 

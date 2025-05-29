@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from app.apps.common.models import TimedBaseModel
+from app.apps.main.models.common import TimedBaseModel
 
 
 class User(AbstractUser, TimedBaseModel):

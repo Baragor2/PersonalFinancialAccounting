@@ -36,8 +36,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # first party
     "app.apps.users.apps.UsersConfig",
-    "app.apps.transactions.apps.TransactionsConfig",
-    "app.apps.categories.apps.CategoriesConfig",
+    "app.apps.main",
 ]
 
 MIDDLEWARE = [
