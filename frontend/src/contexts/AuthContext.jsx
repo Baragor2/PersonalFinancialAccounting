@@ -14,19 +14,16 @@ export const AuthProvider = ({ children }) => {
         if (token) {
             try {
                 const decodedUser = jwtDecode(token);
-                if (decodedUser.exp * 1000 < Date.now()) {
-                    logout();
-                } else {
-                    setAuthToken(token);
-                    setUser(decodedUser);
-                }
+                setAuthToken(token);
+                setUser(decodedUser);
             } catch (error) {
                 console.error("Invalid token:", error);
                 logout();
             }
         }
-    setLoading(false);
-}, []);
+        setLoading(false);
+    }, []);
+
 
     const login = async (username, password) => {
         try {
