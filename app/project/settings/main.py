@@ -19,6 +19,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["0.0.0.0", "localhost"]
 
+AUTH_USER_MODEL = "users.User"
+
 
 # Application definition
 
@@ -31,8 +33,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework_swagger",
     "drf_spectacular",
+    "corsheaders",
     # first party
-    "app.apps.test_examples.apps.TestExamplesConfig",
+    "app.apps.users.apps.UsersConfig",
+    "app.apps.main",
 ]
 
 MIDDLEWARE = [
@@ -43,6 +47,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "app.project.urls"
@@ -62,6 +67,8 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
 
 WSGI_APPLICATION = "app.project.wsgi.application"
 
@@ -128,4 +135,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
