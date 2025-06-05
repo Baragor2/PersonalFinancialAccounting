@@ -5,19 +5,19 @@ function RegisterForm({ onRegister }) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [password2, setPassword2] = useState('');
+    const [repeated_password, setRepeatedPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password !== password2) {
+        if (password !== repeated_password) {
             setError("Passwords don't match.");
             return;
         }
         setError('');
         setLoading(true);
-        const success = await onRegister({ username, email, password, password2 });
+        const success = await onRegister({ username, email, password, repeated_password });
         if (!success) {
             setError('Registration failed. Username or email might already exist.');
         }
@@ -41,7 +41,7 @@ function RegisterForm({ onRegister }) {
         </Form.Group>
         <Form.Group className="mb-3">
             <Form.Label>Confirm Password</Form.Label>
-            <Form.Control type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} required />
+            <Form.Control type="password" value={repeated_password} onChange={(e) => setRepeatedPassword(e.target.value)} required />
         </Form.Group>
         <Button variant="primary" type="submit" disabled={loading}>
             {loading ? 'Registering...' : 'Register'}
