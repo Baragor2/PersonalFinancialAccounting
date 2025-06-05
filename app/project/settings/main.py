@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     "rest_framework_swagger",
     "drf_spectacular",
     "corsheaders",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     # first party
     "app.apps.users.apps.UsersConfig",
     "app.apps.main",
