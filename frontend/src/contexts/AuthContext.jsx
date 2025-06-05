@@ -9,6 +9,14 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const clearAuthData = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        setAuthToken(null);
+        setUser(null);
+    };
+
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -18,7 +26,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(decodedUser);
             } catch (error) {
                 console.error("Invalid token:", error);
-                logout();
+                clearAuthData();
             }
         }
         setLoading(false);
@@ -27,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await apiClient.post('users/api/token/', { username, password });
+            const response = await apiClient.post('users/token/', { username, password });
             const { access, refresh } = response.data;
 
             localStorage.setItem('token', access);
@@ -54,11 +62,14 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        setAuthToken(null);
-        setUser(null);
+    const logout = async () => {
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (refreshToken) {
+            await apiClient.post('users/logout/', { refresh: refreshToken });
+        }
+
+        clearAuthData();
     };
 
     const isAuthenticated = !!authToken;
