@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavigationBar from './components/NavigationBar.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
