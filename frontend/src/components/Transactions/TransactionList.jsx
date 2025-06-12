@@ -14,27 +14,27 @@ function TransactionList({ transactions, onEdit, onDelete, categories }) {
 
     return (
         <>
-        <Card.Header className="d-none d-md-block bg-light transaction-list-header">
-            <Row className="fw-bold">
-            <Col md={4}>Title</Col>
-            <Col md={1} className="text-nowrap">Description</Col>
-            <Col md={2} className="text-center">Value</Col>
-            <Col md={2} className="text-center">Date</Col>
-            <Col md={1} className="text-center">Category</Col>
-            <Col md={2} className="text-end">Actions</Col>
-            </Row>
-        </Card.Header>
-        <ListGroup variant="flush">
-            {transactions.map((transaction) => (
-            <TransactionItem
-                key={transaction.id}
-                transaction={transaction}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                categoryMap={categoryMap}
-            />
-            ))}
-        </ListGroup>
+            <Card.Header className="d-none d-md-block bg-light transaction-list-header">
+                <Row className="fw-bold">
+                    <Col md={4}>Title</Col>
+                    <Col md={2} className="text-center">Value</Col>
+                    <Col md={2} className="text-center">Type</Col>
+                    <Col md={2} className="text-center">Date</Col>
+                    <Col md={1} className="text-center">Category</Col>
+                    <Col md={1} className="text-end">Actions</Col>
+                </Row>
+            </Card.Header>
+            <ListGroup variant="flush">
+                {transactions.map((transaction) => (
+                    <TransactionItem
+                        key={transaction.id}
+                        transaction={transaction}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        categoryMap={categoryMap}
+                    />
+                ))}
+            </ListGroup>
         </>
     );
 }
