@@ -1,8 +1,12 @@
 import apiClient from '../api.jsx';
 
-export const getTransactions = async () => {
-    const response = await apiClient.get('/transactions/');
-    return response.data.results;
+export const getTransactions = async (page = 1) => {
+    const response = await apiClient.get('/transactions/', {
+        params: {
+            page: page
+        }
+    });
+    return response.data;
 };
 
 export const getTransaction = async (id) => {
