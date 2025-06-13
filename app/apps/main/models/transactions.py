@@ -43,6 +43,10 @@ class Transaction(TimedBaseModel):
         verbose_name="Description",
         blank=True,
     )
+    date = models.DateField(
+        verbose_name="Date",
+        blank=False,
+    )
     type = models.CharField(
         verbose_name="Transaction Type",
         max_length=7,
