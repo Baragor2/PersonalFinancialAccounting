@@ -3,6 +3,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from app.apps.main.enums import ViewAction
 from app.apps.main.models.reports import Report
 from app.apps.main.serializers.reports import (
     ReportDetailSerializer,
@@ -24,9 +25,9 @@ class ReportViewSet(
         return Report.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        if self.action == ViewAction.RETRIEVE:
             return ReportDetailSerializer
-        if self.action == "partial_update":
+        if self.action == ViewAction.PARTIAL_UPDATE:
             return ReportUpdateSerializer
         return ReportSerializer
 
