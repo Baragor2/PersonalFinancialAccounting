@@ -53,13 +53,10 @@ class ReportViewSet(
         serializer = ReportEmailSerializer(data=request.data)
         if serializer.is_valid():
             validated_data = serializer.validated_data
-            start_date = validated_data.get("start_date")
-            end_date = validated_data.get("end_date")
+            start_date_str = validated_data["start_date"].strftime("%Y-%m-%d")
+            end_date_str = validated_data["end_date"].strftime("%Y-%m-%d")
 
             user = request.user
-
-            start_date_str = start_date.strftime("%Y-%m-%d")
-            end_date_str = end_date.strftime("%Y-%m-%d")
             send_email_report_task(user.id, start_date_str, end_date_str)
 
             return Response({"detail": "Report sended"}, status=status.HTTP_202_ACCEPTED)
