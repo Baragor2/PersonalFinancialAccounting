@@ -11,6 +11,11 @@ class TransactionsConfig(AppConfig):
     name = "app.apps.main.apps.transactions"
 
 
+class ReportsConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "app.apps.main.apps.reports"
+
+
 class CommonConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "common"
