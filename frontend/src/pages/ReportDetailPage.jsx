@@ -66,9 +66,20 @@ const ReportDetailPage = () => {
         }
     };
 
-    const handleSendEmail = async (emailData) => {
+    const handleSendEmail = async () => {
+        if (!reportData) {
+            alert("Report data is not loaded yet.");
+            return;
+        }
+
+        const payload = {
+            start_date: reportData.start_date,
+            end_date: reportData.end_date,
+            category_ids: selectedCategoryIds
+        };
+
         try {
-            await sendReportByEmail(emailData);
+            await sendReportByEmail(payload);
             alert("The report will be sent to your email shortly!");
         } catch (err) {
             console.error("Failed to send email", err);
