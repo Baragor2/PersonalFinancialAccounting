@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from app.apps.main.enums import ViewAction
 from app.apps.main.models.reports import Report
 from app.apps.main.serializers.reports import (
     ReportDetailSerializer,
@@ -11,7 +12,11 @@ from app.apps.main.serializers.reports import (
     ReportSerializer,
     ReportUpdateSerializer,
 )
+<<<<<<< feature/FIN-11
 from app.apps.main.tasks import send_email_report_task
+=======
+from app.apps.main.services.reports import get_start_date
+>>>>>>> dev
 
 
 class ReportViewSet(
@@ -27,9 +32,9 @@ class ReportViewSet(
         return Report.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        if self.action == ViewAction.RETRIEVE:
             return ReportDetailSerializer
-        if self.action == "partial_update":
+        if self.action == ViewAction.PARTIAL_UPDATE:
             return ReportUpdateSerializer
         return ReportSerializer
 
@@ -75,4 +80,12 @@ class ReportViewSet(
         ]
     )
     def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+        response = super().retrieve(request, *args, **kwargs)
+
+        report = self.get_object()
+        start_date = get_start_date(report.period)
+
+        data = response.data
+        data["start_date"] = start_date.isoformat() if start_date else None
+
+        return Response(data)
