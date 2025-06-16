@@ -5,6 +5,7 @@ import { getReportDetail, renameReport, sendReportByEmail } from '../services/re
 import { getCategories } from '../services/categoryService.jsx';
 import ReportDetail from '../components/Reports/ReportDetail.jsx';
 import CategoryFilter from '../components/Reports/CategoryFilter.jsx';
+import ReportEmailForm from '../components/Reports/ReportEmailForm.jsx';
 import ReportTitle from '../components/Reports/ReportTitle.jsx';
 import { FaArrowLeft } from 'react-icons/fa';
 
@@ -65,6 +66,16 @@ const ReportDetailPage = () => {
         }
     };
 
+    const handleSendEmail = async (emailData) => {
+        try {
+            await sendReportByEmail(emailData);
+            alert("The report will be sent to your email shortly!");
+        } catch (err) {
+            console.error("Failed to send email", err);
+            alert("Error sending the report.");
+        }
+    };
+
     return (
         <Container className="app-container">
             {isLoading && (
@@ -97,6 +108,8 @@ const ReportDetailPage = () => {
                                         />
                                     </Card.Body>
                                 </Card>
+
+                                <ReportEmailForm onSend={handleSendEmail} />
                             </div>
                         </Col>
                     </Row>

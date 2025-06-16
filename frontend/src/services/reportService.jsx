@@ -32,3 +32,8 @@ export const renameReport = async (reportId, newTitle) => {
 export const deleteReport = async (reportId) => {
     await apiClient.delete(`/reports/${reportId}/`);
 };
+
+export const sendReportByEmail = async (reportData) => {
+    const response = await apiClient.post('/reports/send-email/', reportData);
+    return response.data;
+};
