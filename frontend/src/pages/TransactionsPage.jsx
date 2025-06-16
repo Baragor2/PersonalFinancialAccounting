@@ -16,7 +16,7 @@ const TransactionFilterControls = ({ categories, filters, onFilterChange, onClea
 
     return (
         <Row className="mb-3 align-items-end">
-            <Col md={4}>
+            <Col md={2}>
                 <Form.Group controlId="filterType">
                     <Form.Label>Filter by Type</Form.Label>
                     <Form.Select
@@ -31,7 +31,7 @@ const TransactionFilterControls = ({ categories, filters, onFilterChange, onClea
                     </Form.Select>
                 </Form.Group>
             </Col>
-            <Col md={4}>
+            <Col md={3}>
                 <Form.Group controlId="filterCategory">
                     <Form.Label>Filter by Category</Form.Label>
                     <Form.Select
@@ -47,8 +47,30 @@ const TransactionFilterControls = ({ categories, filters, onFilterChange, onClea
                     </Form.Select>
                 </Form.Group>
             </Col>
-            <Col md={4} className="d-flex align-items-end">
-                 <Button variant="secondary" onClick={onClearFilters} className="w-100">Clear Filters</Button>
+            <Col md={3}>
+                <Form.Group controlId="filterStartDate">
+                    <Form.Label>Start Date</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="start_date"
+                        value={filters.start_date}
+                        onChange={onFilterChange}
+                    />
+                </Form.Group>
+            </Col>
+            <Col md={3}>
+                <Form.Group controlId="filterEndDate">
+                    <Form.Label>End Date</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="end_date"
+                        value={filters.end_date}
+                        onChange={onFilterChange}
+                    />
+                </Form.Group>
+            </Col>
+            <Col md={1} className="d-flex align-items-end">
+                 <Button variant="secondary" onClick={onClearFilters} className="w-100 mt-3 mt-md-0">Clear</Button>
             </Col>
         </Row>
     );
@@ -70,7 +92,9 @@ function TransactionsPage() {
 
     const [filters, setFilters] = useState({
         type: '',
-        category: ''
+        category: '',
+        start_date: '',
+        end_date: ''
     });
 
     const fetchPageData = useCallback(async (pageToFetch, currentFilters) => {
@@ -107,7 +131,12 @@ function TransactionsPage() {
     };
 
     const handleClearFilters = () => {
-        setFilters({ type: '', category: '' });
+        setFilters({
+            type: '',
+            category: '',
+            start_date: '',
+            end_date: ''
+        });
         setCurrentPage(1);
     };
 

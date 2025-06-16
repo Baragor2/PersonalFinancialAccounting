@@ -11,6 +11,12 @@ export const getTransactions = async (page = 1, filters = {}) => {
     if (filters.category) {
         params.category = filters.category;
     }
+    if (filters.start_date) {
+        params.date_after = filters.start_date;
+    }
+    if (filters.end_date) {
+        params.date_before = filters.end_date;
+    }
 
     const response = await apiClient.get('/transactions/', { params });
     return response.data;
