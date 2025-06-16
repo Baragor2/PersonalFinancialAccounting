@@ -1,5 +1,6 @@
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -7,10 +8,15 @@ from app.apps.main.enums import ViewAction
 from app.apps.main.models.reports import Report
 from app.apps.main.serializers.reports import (
     ReportDetailSerializer,
+    ReportEmailSerializer,
     ReportSerializer,
     ReportUpdateSerializer,
 )
+<<<<<<< feature/FIN-11
+from app.apps.main.tasks import send_email_report_task
+=======
 from app.apps.main.services.reports import get_start_date
+>>>>>>> dev
 
 
 class ReportViewSet(
@@ -46,6 +52,21 @@ class ReportViewSet(
         category_ids = self.request.query_params.getlist("category_ids")
         context["category_ids"] = category_ids
         return context
+
+    @action(detail=False, methods=["post"], url_path="send-email")
+    def send_email_report(self, request):
+        serializer = ReportEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            start_date_str = validated_data["start_date"].strftime("%Y-%m-%d")
+            end_date_str = validated_data["end_date"].strftime("%Y-%m-%d")
+
+            user = request.user
+            send_email_report_task(user.id, start_date_str, end_date_str)
+
+            return Response({"detail": "Report sended"}, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         parameters=[
