@@ -7,8 +7,14 @@ from app.apps.main.models.common import TimedBaseModel
 from app.apps.users.models.users import User
 
 
+class TransactionType(models.TextChoices):
+    INCOME = "income"
+    EXPENSE = "expense"
+
+
 class Transaction(TimedBaseModel):
     id = models.UUIDField(
+        verbose_name="Id",
         primary_key=True,
         default=uuid4,
         editable=False,
@@ -29,10 +35,19 @@ class Transaction(TimedBaseModel):
     )
     user = models.ForeignKey(
         User,
+        verbose_name="User",
         on_delete=models.CASCADE,
         related_name="transactions",
     )
-    description = models.TextField(blank=True)
+    description = models.TextField(
+        verbose_name="Description",
+        blank=True,
+    )
+    type = models.CharField(
+        verbose_name="Transaction Type",
+        max_length=7,
+        choices=TransactionType.choices,
+    )
 
     def __str__(self) -> str:
         return self.title
