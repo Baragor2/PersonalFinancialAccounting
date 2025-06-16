@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date
 from uuid import uuid4
 
 from django.db import models
@@ -24,21 +24,6 @@ class Report(TimedBaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reports")
     title = models.CharField(max_length=255)
     period = models.CharField(max_length=10, choices=ReportPeriod.choices)
-
-    @property
-    def start_date(self):
-        today = date.today()
-        if self.period == ReportPeriod.WEEK:
-            return today - timedelta(days=today.weekday() + 7)
-        if self.period == ReportPeriod.MONTH:
-            return today.replace(day=1)
-        if self.period == ReportPeriod.QUARTER:
-            current_quarter = (today.month - 1) // 3 + 1
-            first_month_of_quarter = (current_quarter - 1) * 3 + 1
-            return today.replace(month=first_month_of_quarter, day=1)
-        if self.period == ReportPeriod.YEAR:
-            return today.replace(month=1, day=1)
-        return None
 
     @property
     def end_date(self):

@@ -10,6 +10,7 @@ from app.apps.main.serializers.reports import (
     ReportSerializer,
     ReportUpdateSerializer,
 )
+from app.apps.main.services.reports import get_start_date
 
 
 class ReportViewSet(
@@ -58,4 +59,12 @@ class ReportViewSet(
         ]
     )
     def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
+        response = super().retrieve(request, *args, **kwargs)
+
+        report = self.get_object()
+        start_date = get_start_date(report.period)
+
+        data = response.data
+        data["start_date"] = start_date.isoformat() if start_date else None
+
+        return Response(data)

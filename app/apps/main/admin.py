@@ -18,11 +18,8 @@ class TransactionAdmin(admin.ModelAdmin):
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
     list_display = ("title", "user", "period", "created_at")
-
     list_filter = ("period", "user")
-
     search_fields = ("title", "user__username")
-
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (
