@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Button, Alert, Spinner, Card } from 'react-bootstrap';
+import { Container, Button, Alert, Spinner, Card, Form, Row, Col } from 'react-bootstrap';
 import TransactionList from '../components/Transactions/TransactionList.jsx';
 import TransactionForm from '../components/Transactions/TransactionForm.jsx';
 import PaginationControls from '../components/common/PaginationControls.jsx';
@@ -7,6 +7,75 @@ import { getTransactions, createTransaction, updateTransaction, deleteTransactio
 import { getCategories } from '../services/categoryService.jsx';
 
 const PAGE_SIZE = 5;
+
+const TransactionFilterControls = ({ categories, filters, onFilterChange, onClearFilters }) => {
+    const transactionTypes = [
+        { value: 'income', label: 'Income' },
+        { value: 'expense', label: 'Expense' },
+    ];
+
+    return (
+        <Row className="mb-3 align-items-end">
+            <Col md={2}>
+                <Form.Group controlId="filterType">
+                    <Form.Label>Filter by Type</Form.Label>
+                    <Form.Select
+                        name="type"
+                        value={filters.type}
+                        onChange={onFilterChange}
+                    >
+                        <option value="">All Types</option>
+                        {transactionTypes.map(type => (
+                            <option key={type.value} value={type.value}>{type.label}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+            </Col>
+            <Col md={3}>
+                <Form.Group controlId="filterCategory">
+                    <Form.Label>Filter by Category</Form.Label>
+                    <Form.Select
+                        name="category"
+                        value={filters.category}
+                        onChange={onFilterChange}
+                        disabled={categories.length === 0}
+                    >
+                        <option value="">All Categories</option>
+                        {categories.map(category => (
+                            <option key={category.id} value={category.id}>{category.title}</option>
+                        ))}
+                    </Form.Select>
+                </Form.Group>
+            </Col>
+            <Col md={3}>
+                <Form.Group controlId="filterStartDate">
+                    <Form.Label>Start Date</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="start_date"
+                        value={filters.start_date}
+                        onChange={onFilterChange}
+                    />
+                </Form.Group>
+            </Col>
+            <Col md={3}>
+                <Form.Group controlId="filterEndDate">
+                    <Form.Label>End Date</Form.Label>
+                    <Form.Control
+                        type="date"
+                        name="end_date"
+                        value={filters.end_date}
+                        onChange={onFilterChange}
+                    />
+                </Form.Group>
+            </Col>
+            <Col md={1} className="d-flex align-items-end">
+                 <Button variant="secondary" onClick={onClearFilters} className="w-100 mt-3 mt-md-0">Clear</Button>
+            </Col>
+        </Row>
+    );
+};
+
 
 function TransactionsPage() {
     const [transactions, setTransactions] = useState([]);
@@ -21,28 +90,55 @@ function TransactionsPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalTransactions, setTotalTransactions] = useState(0);
 
-    const fetchPageData = useCallback(async (pageToFetch) => {
+    const [filters, setFilters] = useState({
+        type: '',
+        category: '',
+        start_date: '',
+        end_date: ''
+    });
+
+    const fetchPageData = useCallback(async (pageToFetch, currentFilters) => {
         try {
             setLoading(true);
             setError('');
-            const [transData, catData] = await Promise.all([
-                getTransactions(pageToFetch),
-                getCategories()
-            ]);
+            if (categories.length === 0) {
+                 const catData = await getCategories();
+                 setCategories(catData);
+            }
+            const transData = await getTransactions(pageToFetch, currentFilters);
+
             setTransactions(transData.results || []);
             setTotalTransactions(transData.count || 0);
-            setCategories(catData);
         } catch (err) {
             setError('Failed to fetch data. Please try again later.');
             console.error(err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [categories.length]);
 
     useEffect(() => {
-        fetchPageData(currentPage);
-    }, [currentPage, fetchPageData]);
+        fetchPageData(currentPage, filters);
+    }, [currentPage, filters, fetchPageData]);
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [name]: value
+        }));
+        setCurrentPage(1);
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            type: '',
+            category: '',
+            start_date: '',
+            end_date: ''
+        });
+        setCurrentPage(1);
+    };
 
     const handleShowModal = (transaction = null) => {
         setCurrentTransaction(transaction);
@@ -67,7 +163,7 @@ function TransactionsPage() {
             } else {
                 await createTransaction(transactionData);
             }
-            fetchPageData(currentPage);
+            fetchPageData(currentPage, filters);
             handleCloseModal();
         } catch (err) {
             console.error("Failed to save transaction:", err.response ? err.response.data : err);
@@ -87,7 +183,7 @@ function TransactionsPage() {
             try {
                 setError('');
                 await deleteTransaction(id);
-                fetchPageData(currentPage);
+                fetchPageData(currentPage, filters);
             } catch (err) {
                 console.error("Failed to delete transaction:", err);
                 setError('Failed to delete transaction.');
@@ -97,11 +193,11 @@ function TransactionsPage() {
 
     const totalPages = Math.ceil(totalTransactions / PAGE_SIZE);
 
-    if (loading) {
+    if (loading && transactions.length === 0) {
         return (
             <Container className="text-center mt-5">
                 <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading transactions...</span>
+                    <span className="visually-hidden">Loading...</span>
                 </Spinner>
             </Container>
         );
@@ -123,12 +219,33 @@ function TransactionsPage() {
                             Please <a href="/categories">add a category</a> before adding transactions.
                         </Alert>
                     )}
-                    <TransactionList
-                        transactions={transactions}
+
+                    <TransactionFilterControls
                         categories={categories}
-                        onEdit={handleShowModal}
-                        onDelete={handleDeleteTransaction}
+                        filters={filters}
+                        onFilterChange={handleFilterChange}
+                        onClearFilters={handleClearFilters}
                     />
+
+                    {loading && (
+                         <div className="text-center my-3">
+                            <Spinner animation="border" size="sm" /> Loading...
+                         </div>
+                    )}
+
+                    {!loading && (
+                        <TransactionList
+                            transactions={transactions}
+                            categories={categories}
+                            onEdit={handleShowModal}
+                            onDelete={handleDeleteTransaction}
+                        />
+                    )}
+
+                    {!loading && totalTransactions === 0 && (
+                        <Alert variant="info">No transactions found matching your criteria.</Alert>
+                    )}
+
                 </Card.Body>
 
                 {totalTransactions > 0 && !loading && (
