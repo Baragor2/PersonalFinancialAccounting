@@ -1,5 +1,5 @@
-<<<<<<< feature/FIN-11
 from collections import defaultdict
+from datetime import date, timedelta
 from decimal import Decimal
 
 from app.apps.main.models.transactions import Transaction, TransactionType
@@ -60,13 +60,11 @@ def generate_report_data(user, start_date, end_date, category_ids=None):
     report_data["final_balance"] = report_data["income"]["total"] - report_data["expense"]["total"]
 
     return report_data
-=======
-from datetime import date, timedelta
-
-from app.apps.main.models.reports import ReportPeriod
 
 
 def get_start_date(period: str) -> date | None:
+    from app.apps.main.models.reports import ReportPeriod
+
     today = date.today()
 
     if period == ReportPeriod.WEEK:
@@ -81,4 +79,3 @@ def get_start_date(period: str) -> date | None:
         return today.replace(month=1, day=1)
 
     return None
->>>>>>> dev
