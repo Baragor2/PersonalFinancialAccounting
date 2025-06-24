@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.db import models
 
 from app.apps.main.models.common import TimedBaseModel
+from app.apps.main.services.reports import get_start_date
 from app.apps.users.models.users import User
 
 
@@ -28,6 +29,10 @@ class Report(TimedBaseModel):
     @property
     def end_date(self):
         return date.today()
+
+    @property
+    def start_date(self):
+        return get_start_date(self.period)
 
     def __str__(self):
         return f"{self.title} ({self.period})"

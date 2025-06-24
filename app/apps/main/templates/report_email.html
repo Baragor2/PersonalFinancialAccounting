@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Financial report</title>
+    <title>Financial Report</title>
+    <meta charset="UTF-8">
     <style>
         body { font-family: sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -10,56 +11,76 @@
         .total { font-weight: bold; }
         .income { color: green; }
         .expense { color: red; }
+        .summary-table { width: auto; min-width: 300px; float: left; }
+        .summary-table td { text-align: right; }
+        .summary-table td:first-child { text-align: left; font-weight: bold; }
     </style>
 </head>
 <body>
     <h2>Hello, {{ user.first_name|default:user.username }}!</h2>
     <p>Financial report from {{ start_date|date:"d.m.Y" }} to {{ end_date|date:"d.m.Y" }}.</p>
 
-    <h3>Expenses: <span class="expense">-{{ data.expense.total|floatformat:2 }}</span></h3>
-    {% if data.expense.categories %}
-        {% for category in data.expense.categories %}
-            <h4>Category: {{ category.category_title }}</h4>
-            <table>
-                <thead><tr><th>Date</th><th>Sum</th><th>Description</th></tr></thead>
-                <tbody>
-                {% for tx in category.transactions %}
-                    <tr>
-                        <td>{{ tx.date }}</td>
-                        <td>{{ tx.value }}</td>
-                        <td>{{ tx.description|default:"-" }}</td>
-                    </tr>
+    <h3>Operations Details</h3>
+
+    {% if data.income.categories or data.expense.categories %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {# First, list the incomes #}
+                {% for category in data.income.categories %}
+                    {% for tx in category.transactions %}
+                        <tr>
+                            <td>{{ tx.date }}</td>
+                            <td>Income</td>
+                            <td>{{ category.category_title }}</td>
+                            <td class="income">+{{ tx.value|floatformat:2 }}</td>
+                            <td>{{ tx.description|default:"-" }}</td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
+
+                {# Then, list the expenses #}
+                {% for category in data.expense.categories %}
+                    {% for tx in category.transactions %}
+                        <tr>
+                            <td>{{ tx.date }}</td>
+                            <td>Expense</td>
+                            <td>{{ category.category_title }}</td>
+                            <td class="expense">-{{ tx.value|floatformat:2 }}</td>
+                            <td>{{ tx.description|default:"-" }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
     {% else %}
-        <p>No expenses in the period</p>
+        <p>No operations found for the specified period.</p>
     {% endif %}
 
-    <h3>Incomes: <span class="income">+{{ data.income.total|floatformat:2 }}</span></h3>
-    {% if data.income.categories %}
-        {% for category in data.income.categories %}
-            <h4>Category: {{ category.category_title }}</h4>
-            <table>
-                <thead><tr><th>Date</th><th>Sum</th><th>Description</th></tr></thead>
-                <tbody>
-                {% for tx in category.transactions %}
-                    <tr>
-                        <td>{{ tx.date }}</td>
-                        <td>{{ tx.value }}</td>
-                        <td>{{ tx.description|default:"-" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% endfor %}
-    {% else %}
-        <p>No incomes in the period</p>
-    {% endif %}
     <hr>
-    <h3>Result</h3>
-    <p class="total">Final balance {{ data.final_balance|floatformat:2 }}</p>
+    <h3>Summary</h3>
+    <table class="summary-table">
+        <tr>
+            <td>Total Income:</td>
+            <td class="income">+{{ data.income.total|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <td>Total Expenses:</td>
+            <td class="expense">-{{ data.expense.total|floatformat:2 }}</td>
+        </tr>
+        <tr class="total">
+            <td>Final Balance:</td>
+            <td>{{ data.final_balance|floatformat:2 }}</td>
+        </tr>
+    </table>
 
 </body>
 </html>

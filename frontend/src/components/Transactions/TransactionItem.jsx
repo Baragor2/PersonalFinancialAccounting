@@ -38,7 +38,7 @@ function TransactionItem({ transaction, onEdit, onDelete, categoryMap }) {
                 </Col>
 
                 <Col md={2} xs={6} className="text-center text-md-center">
-                    {formatDate(transaction.created_at)}
+                    {formatDate(transaction.date)}
                 </Col>
 
                 <Col md={1} xs={6} className="text-center text-md-center">
